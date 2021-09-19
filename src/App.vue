@@ -1,32 +1,30 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div>
+    <Loading v-if="$auth.isLoading" />
+    <div v-else id="app" class="d-flex flex-column h-100">
+      <template>
+        <NavBar />
+        <div class="container flex-grow-1">
+          <div class="mt-5">
+            <router-view />
+          </div>
+        </div>
+        <Footer />
+      </template>
     </div>
-    <router-view />
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import NavBar from '@/components/NavBar'
+import Footer from '@/components/Footer'
+import Loading from '@/components/Loading'
 
-#nav {
-  padding: 30px;
+export default {
+  components: {
+    Loading,
+    Footer,
+    NavBar,
+  },
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>

@@ -1,0 +1,7 @@
+{
+  "domain": "dev-cis0hn3u.us.auth0.com",
+  "clientId": "d0PlDigKSTolshvM9aj1PejoKmwG2mYR",
+  "audience": "https://libcellml.org/mps/api",
+  "serverUrl": "http://localhost:6060"
+}
+
