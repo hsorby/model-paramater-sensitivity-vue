@@ -11,11 +11,10 @@
 </template>
 
 <script>
-import MainNav from "@/components/MainNav";
-import AuthNav from "@/components/AuthNav";
+import MainNav from '@/components/MainNav'
+import AuthNav from '@/components/AuthNav'
 export default {
-  name: "NavBar",
+  name: 'NavBar',
   components: { AuthNav, MainNav },
-};
+}
 </script>
-

@@ -25,8 +25,12 @@
 
 <script>
 import { serverUrl } from '../../auth_config.json'
+import titleMixin from '@/mixins/title'
+
 export default {
   name: 'Api',
+  title: 'ExternalAPI - Model Parameter Sensitivity',
+  mixins: [titleMixin],
   data() {
     return {
       apiMessage: null,

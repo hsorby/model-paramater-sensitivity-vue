@@ -15,3 +15,13 @@
     </div>
   </div>
 </template>
+
+<script>
+import titleMixin from '@/mixins/title'
+
+export default {
+  name: 'Profile',
+  title: 'Profile - Model Parameter Sensitivity',
+  mixins: [titleMixin],
+}
+</script>
