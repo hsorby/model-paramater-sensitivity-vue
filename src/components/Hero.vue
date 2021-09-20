@@ -11,7 +11,7 @@ export default {
   name: 'Hero',
   data() {
     return {
-      heroLogo: 'https://github.com/hsorby/model-paramater-sensitivity-vue/src/assets/mps-32-icon.svg',
+      heroLogo: 'https://raw.githubusercontent.com/hsorby/model-paramater-sensitivity-vue/main/src/assets/mps-32-icon.svg',
     }
   },
 }
