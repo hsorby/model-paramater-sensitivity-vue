@@ -7,9 +7,17 @@ import store from './store'
 import { domain, clientId, audience } from '../auth_config.json'
 import { Auth0Plugin } from '@/auth/auth0-plugin'
 
-import './assets/css/styles.css'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faTimes, faPlusSquare, faMinusSquare } from '@fortawesome/free-solid-svg-icons'
+
+import '@/assets/css/styles.css'
+
+library.add(faTimes, faPlusSquare, faMinusSquare)
 
 Vue.config.productionTip = false
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 // Install the authentication plugin
 Vue.use(Auth0Plugin, {

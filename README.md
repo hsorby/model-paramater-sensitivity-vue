@@ -1,4 +1,4 @@
-# model-paramater-sensitivity-vue
+# Model Paramater Sensitivity Webapp
 
 ## Project setup
 ```
@@ -22,3 +22,7 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+Set backend API in *.env.local*, for example:
+```
+VUE_APP_BACKEND_HOST_API=http://localhost:6060/api/v1
+```

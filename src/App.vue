@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <Loading v-if="$auth.isLoading" />
     <div v-else id="app" class="d-flex flex-column h-100">
       <template>
@@ -20,6 +20,8 @@ import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import Loading from '@/components/Loading'
 
+import 'vue-select/dist/vue-select.css'
+
 export default {
   components: {
     Loading,
@@ -28,3 +30,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.relative {
+  position: relative;
+}
+</style>

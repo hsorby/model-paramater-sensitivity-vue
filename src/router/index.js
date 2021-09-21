@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home.vue'
+import Simulations from '@/views/Simulations.vue'
+import About from '@/views/About.vue'
 import Profile from '@/views/Profile.vue'
 import ExternalApi from '@/views/ExternalApi'
 
@@ -18,6 +20,12 @@ const router = new Router({
       component: Home,
     },
     {
+      path: '/simulations',
+      name: 'simulations',
+      component: Simulations,
+      beforeEnter: authenticationGuard,
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: Profile,
@@ -28,6 +36,11 @@ const router = new Router({
       name: 'external-api',
       component: ExternalApi,
       beforeEnter: authenticationGuard,
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About,
     },
   ],
 })

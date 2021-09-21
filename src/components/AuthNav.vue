@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import AuthenticationButton from '@/components/AuthenticationButton'
+import AuthenticationButton from '@/components/Buttons/AuthenticationButton'
 
 export default {
   name: 'AuthNav',

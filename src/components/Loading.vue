@@ -1,17 +1,22 @@
 <template>
-  <div class="spinner">
-    <img :src="loadingImg" alt="Loading..." />
+  <div :class="{ 'loading-overlay-full-screen': fullScreen, 'loading-overlay-local': !fullScreen, 'loading-overlay': true }">
+    <div v-if="imageOrText" class="image loading-overlay-content" />
+    <div v-else class="text loading-overlay-content">Loading ...</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Loading",
-  data() {
-    return {
-      loadingImg:
-        "https://cdn.auth0.com/blog/auth0-react-sample/assets/loading.svg",
-    };
+  name: 'Loading',
+  props: {
+    imageOrText: {
+      type: Boolean,
+      default: true,
+    },
+    fullScreen: {
+      type: Boolean,
+      default: true,
+    },
   },
-};
+}
 </script>
