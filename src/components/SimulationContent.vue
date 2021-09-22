@@ -8,9 +8,13 @@
             entry.message
           }}</Alert>
         </div>
-        <upload-file class="mb-4" @upload-success="notifySuccess"><h2 class="mb-3">Upload model file to get started:</h2></upload-file>
+        <upload-file class="mb-4" @upload-success="notifySuccess" @upload-failure="notifyFailure"
+          ><h2 class="mb-3">Upload model file to get started:</h2></upload-file
+        >
         <local-loading :loading="isBusyLoading">
-          <load-model class="mb-4" @loadFile="loadFile($event)" @busy="loading"><h2 class="mb-3">Then load parameters from a model:</h2></load-model>
+          <load-model class="mb-4" @load-file="loadFile" @fetch-success="notifySuccess" @fetch-failure="notifyFailure" @busy="loading"
+            ><h2 class="mb-3">Then load parameters from a model:</h2></load-model
+          >
         </local-loading>
         <model-parameter-uncertainties :model-parameters="parameterInformation" class="mb-4" @select="parameterSelected"
           ><h2 class="mb-3">Then select uncertain parameters:</h2></model-parameter-uncertainties

@@ -13,7 +13,7 @@ const apiClient = axios.create({
 })
 
 const upload = async (formData, fileName, callbackFunction, token) => {
-  const response = await apiClient.post('upload', formData, {
+  const config = {
     onUploadProgress: (progressEvent) => {
       callbackFunction(progressEvent, fileName)
     },
@@ -21,7 +21,9 @@ const upload = async (formData, fileName, callbackFunction, token) => {
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${token}`,
     },
-  })
+  }
+  const response = await apiClient.post('upload', formData, config)
+
   return response.data
 }
 

@@ -2,7 +2,7 @@
   <div>
     <slot></slot>
     <v-select v-model="selectedFile" :options="filesListing" class="mr-4 inline-block select"></v-select>
-    <load-button @click="$emit('loadFile', selectedFile)" />
+    <load-button @click="$emit('load-file', selectedFile)" />
   </div>
 </template>
 
@@ -49,12 +49,18 @@ export default {
     async fetchFilesListing() {
       this.$emit('busy', true)
       const accessToken = await this.$auth.getTokenSilently()
-      const files = await listUserModels(accessToken)
-      this.filesListing = files.model_files
-      if (this.filesListing.indexOf(this.selectedFile) == -1) {
-        this.selectedFile = this.filesListing[0]
+      const files = await listUserModels(accessToken).catch((error) => {
+        this.$emit('fetch-failure', { message: error.message })
+        return
+      })
+      if (files) {
+        this.$emit('fetch-success', { message: 'Successfully fetched available files.' })
+        this.filesListing = files.model_files
+        if (this.filesListing.indexOf(this.selectedFile) == -1) {
+          this.selectedFile = this.filesListing[0]
+        }
+        this.$emit('busy', false)
       }
-      this.$emit('busy', false)
     },
   },
 }

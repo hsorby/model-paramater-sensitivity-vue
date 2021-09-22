@@ -142,10 +142,8 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err.message, 'Upload file(s) error')
-          // this.$alert(err.message, 'Upload file(s) error', 'error')
+          this.$emit('upload-failure', { message: err.message })
           this.resolvedCount += 1
-          console.log(this.files)
           if (this.resolvedCount === this.fileCount) {
             this.reset()
           }
