@@ -9,11 +9,15 @@ import { Auth0Plugin } from '@/auth/auth0-plugin'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTimes, faPlusSquare, faMinusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faPlusSquare, faMinusSquare, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+
+import VueSweetalert2 from 'vue-sweetalert2'
 
 import '@/assets/css/styles.css'
+import 'vue-select/dist/vue-select.css'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
-library.add(faTimes, faPlusSquare, faMinusSquare)
+library.add(faTimes, faPlusSquare, faMinusSquare, faAngleRight, faAngleLeft)
 
 Vue.config.productionTip = false
 
@@ -28,6 +32,8 @@ Vue.use(Auth0Plugin, {
     router.push(appState && appState.targetUrl ? appState.targetUrl : window.location.pathname)
   },
 })
+
+Vue.use(VueSweetalert2)
 
 new Vue({
   router,

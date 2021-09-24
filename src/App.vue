@@ -1,9 +1,9 @@
 <template>
   <div class="relative">
-    <Loading v-if="$auth.isLoading" />
+    <loading v-if="$auth.isLoading" />
     <div v-else id="app" class="d-flex flex-column h-100">
       <template>
-        <NavBar />
+        <nav-bar />
         <div class="container flex-grow-1">
           <div class="mt-5">
             <router-view />
@@ -12,6 +12,7 @@
         <Footer />
       </template>
     </div>
+    <notifications />
   </div>
 </template>
 
@@ -19,14 +20,22 @@
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import Loading from '@/components/Loading'
-
-import 'vue-select/dist/vue-select.css'
+import Notifications from './components/Notifications.vue'
 
 export default {
   components: {
     Loading,
     Footer,
     NavBar,
+    Notifications,
+  },
+  watch: {
+    '$auth.isAuthenticated': {
+      handler() {
+        this.$store.commit('changeUserState', this.$auth.isAuthenticated)
+        this.$store.dispatch('fetchUserModels')
+      },
+    },
   },
 }
 </script>

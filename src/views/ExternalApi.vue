@@ -3,8 +3,9 @@
     <h1 class="text-center">External API</h1>
     <div class="col-md-11 mb-4">
       <p>
-        Your user will use a button to call an external API using an access token, and the API will validate it using the API's audience value.
-        <strong>This route should be private</strong>.
+        Use these two buttons to test the connection to the backend. The <strong>Get Public Message</strong> should always work if the backend is
+        running. The <strong>Get Private Message</strong> will only work if the backend can authenticate you as a user of this resource.
+        <strong>This route should be private</strong> i.e. you shouldn't be able to get here if you are not already logged in.
       </p>
       <div class="btn-group mt-5" role="group" aria-label="External API Requests Examples">
         <button type="button" class="btn btn-primary" @click="callApiEndpoint">Get Public Message</button>

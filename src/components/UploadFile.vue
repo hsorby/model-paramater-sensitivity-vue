@@ -132,8 +132,8 @@ export default {
       const accessToken = await this.$auth.getTokenSilently()
 
       upload(formData, fileName, this.onUploadProgress, accessToken)
-        .then((x) => {
-          this.$emit('upload-success', x)
+        .then(() => {
+          this.$emit('upload-success', fileName)
           this.resolvedCount += 1
           if (this.resolvedCount === this.fileCount) {
             setTimeout(() => {
@@ -142,7 +142,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.$emit('upload-failure', { message: err.message })
+          this.$emit('upload-failure', err.message)
           this.resolvedCount += 1
           if (this.resolvedCount === this.fileCount) {
             this.reset()

@@ -32,7 +32,6 @@ export default {
   watch: {
     'node.isOpen': function (val) {
       this.activeIcon = val ? 'plus-square' : 'minus-square'
-      console.log(val, this.activeIcon)
       if (!Object.prototype.hasOwnProperty.call(this.node, '_loading')) {
         // this.node._loading = false
         this.$set(this.node, '_loading', false)
