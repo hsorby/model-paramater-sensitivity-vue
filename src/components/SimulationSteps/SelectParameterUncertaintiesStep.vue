@@ -9,21 +9,17 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import ModelParameterUncertainties from '@/components/ModelParameterUncertainties.vue'
-
-import toastMixin from '@/mixins/toast'
+import ModelParameterUncertainties from '@/components/SimulationSteps/SelectParameterUncertaintiesStep/ModelParameterUncertainties.vue'
 
 export default {
   name: 'SelectParameterUncertaintiesStep',
   components: { ModelParameterUncertainties },
-  mixins: [toastMixin],
   data() {
     return {}
   },
   computed: {
     ...mapGetters(['parameterInformation']),
   },
-
   methods: {
     ...mapActions('notifications', ['addSuccess', 'addFailure']),
     parameterSelected(data) {
@@ -35,7 +31,6 @@ export default {
           this.uncertainParameters.splice(idx, 1)
         }
       }
-      // console.log(this.uncertainParameters)
     },
   },
 }

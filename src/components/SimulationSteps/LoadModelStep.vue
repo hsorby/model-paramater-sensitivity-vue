@@ -9,7 +9,7 @@
               <span> upload a model file:</span></upload-file
             >
           </div>
-          <div id="use-file-source">
+          <div>
             <select-model class="mb-4"
               ><h2 class="mb-3 inline-block">Or,</h2>
               <span> select an existing model:</span>
@@ -19,8 +19,12 @@
         </div>
       </div>
       <div class="flex-container vertical-centre justify-end">
-        <div id="load-file-target">
-          <load-model />
+        <div>
+          <load-model>
+            <h2 class="mb-3 inline-block">Then,</h2>
+            <span> load the model:</span>
+            <br
+          /></load-model>
         </div>
       </div>
     </div>
@@ -28,24 +32,19 @@
 </template>
 
 <script>
+import LeaderLine from 'leader-line-vue'
+
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 import UploadFile from '@/components/UploadFile.vue'
-import LoadModel from '@/components/LoadModel.vue'
-import SelectModel from '@/components/SelectModel.vue'
-import LeaderLine from 'leader-line-vue'
-
-import toastMixin from '@/mixins/toast'
+import LoadModel from '@/components/SimulationSteps/LoadModelStep/LoadModel.vue'
+import SelectModel from '@/components/SimulationSteps/LoadModelStep/SelectModel.vue'
 
 export default {
   name: 'LoadModelStep',
   components: { UploadFile, SelectModel, LoadModel },
-  mixins: [toastMixin],
   data() {
     return {
-      uncertainParameters: [],
-      tabs: ['step1', 'step2', 'step3'],
-      initialTab: 'step1',
       line1: null,
       line2: null,
       ro: null,

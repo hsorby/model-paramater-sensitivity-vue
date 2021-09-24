@@ -10,7 +10,7 @@
         class="mr-4 inline-block select"
         @input="userModelChanged"
       ></v-select>
-      <select-button :disabled="userModelCount === 0" @click="selectCurrentUserModel" />
+      <select-button id="use-file-source" :disabled="userModelCount === 0" @click="selectCurrentUserModel" />
     </local-loading>
   </div>
 </template>
@@ -18,17 +18,14 @@
 <script>
 import vSelect from 'vue-select'
 
-import SelectButton from './Buttons/SelectButton.vue'
-import LocalLoading from './LocalLoading.vue'
-
-import toastMixin from '@/mixins/toast'
+import SelectButton from '../../Buttons/SelectButton.vue'
+import LocalLoading from '../../LocalLoading.vue'
 
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'SelectModel',
   components: { vSelect, SelectButton, LocalLoading },
-  mixins: [toastMixin],
   computed: {
     ...mapGetters(['userModels', 'fetchingUserModels', 'selectedUserModel']),
     userModelCount() {

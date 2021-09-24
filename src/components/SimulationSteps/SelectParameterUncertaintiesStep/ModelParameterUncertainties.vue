@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Tree from './Tree/Tree.vue'
+import Tree from '@/components/Tree/Tree.vue'
 
 export default {
   name: 'ModelParameterUncertainties',

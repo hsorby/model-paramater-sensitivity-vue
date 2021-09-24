@@ -1,7 +1,8 @@
 <template>
   <div>
     <local-loading :loading="loadingUserModel">
-      <span :class="{ 'ghost-text': !valueReady }">{{ currentUserModel }}</span>
+      <slot></slot>
+      <span id="load-file-target" :class="{ 'ghost-text': !valueReady }">{{ currentUserModel }}</span>
       <load-button class="ml-2" :disabled="!valueReady" @click="loadUserModel" />
     </local-loading>
   </div>
@@ -10,8 +11,8 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import LoadButton from './Buttons/LoadButton.vue'
-import LocalLoading from './LocalLoading.vue'
+import LoadButton from '../../Buttons/LoadButton.vue'
+import LocalLoading from '../../LocalLoading.vue'
 
 export default {
   name: 'LoadModel',
