@@ -1,11 +1,11 @@
 <template>
-  <li :class="{ parent_li: node.isParent }" :style="{ 'background-color': backgroundColour }" @click.prevent="selectNode(node)">
-    <font-awesome-icon v-if="node.isParent" :icon="activeIcon" @click.prevent="toggle(node)" />
+  <li :class="{ parent_li: isParent, selected: node.isSelected }" @click="selectNode(node)">
+    <font-awesome-icon v-if="isParent" :icon="isOpen ? 'plus-square' : 'minus-square'" @click="toggle" />
     <span :title="node.title"> <img v-if="showIcon(node)" :src="node.icon" :class="nodeClass(node)" /> {{ node.name }}</span>
     <a v-for="btn in node.buttons" :key="btn.title" class="ml5" href="javascript:" :title="btn.title" @click="btnClick(btn, node)">
       <i :class="btn.icon"></i>
     </a>
-    <ul v-show="node.isOpen">
+    <ul v-show="isOpen">
       <li v-show="node.showLoading && node._loading"><i class="fa fa-spinner fa-pulse"></i></li>
       <tree-item v-for="item in node.children" :key="item.name" :node="item" @selectItem="$emit('selectItem', $event)"></tree-item>
     </ul>
@@ -25,26 +25,12 @@ export default {
   },
   data() {
     return {
-      activeIcon: 'plus-square',
-      backgroundColour: 'unset',
+      isOpen: true,
     }
   },
-  watch: {
-    'node.isOpen': function (val) {
-      this.activeIcon = val ? 'plus-square' : 'minus-square'
-      if (!Object.prototype.hasOwnProperty.call(this.node, '_loading')) {
-        // this.node._loading = false
-        this.$set(this.node, '_loading', false)
-      }
-      if (val) {
-        if (typeof this.node.onOpened === 'function') {
-          this.node.onOpened(this.node)
-        }
-      } else {
-        if (typeof this.node.onClosed === 'function') {
-          this.node.onClosed(this.node)
-        }
-      }
+  computed: {
+    isParent() {
+      return this.node.children.length > 0
     },
   },
   methods: {
@@ -58,24 +44,12 @@ export default {
         return node.closedIcon || node.icon
       }
     },
-    toggle: function (node) {
-      if (Object.prototype.hasOwnProperty.call(node, 'isOpen')) {
-        node.isOpen = !node.isOpen
-        this.activeIcon = node.isOpen ? 'plus-square' : 'minus-square'
-      } else {
-        this.$set(node, 'isOpen', true)
-        this.activeIcon = 'plus-square'
-      }
+    toggle: function () {
+      this.isOpen = !this.isOpen
     },
     selectNode: function (node) {
       if (node.id) {
-        const state = this.backgroundColour == 'unset'
-        this.$emit('selectItem', { id: node.id, state })
-        if (this.backgroundColour == 'unset') {
-          this.backgroundColour = 'darkorange'
-        } else {
-          this.backgroundColour = 'unset'
-        }
+        this.$emit('selectItem', { id: node.id, state: !node.isSelected })
       }
     },
     btnClick: function (btn, node) {
@@ -118,6 +92,10 @@ export default {
 
 .tree ul ul li:hover {
   background: rgba(0, 0, 0, 0.015);
+}
+
+.tree ul ul li .selected {
+  background-color: darkorange;
 }
 
 .tree li:after,

@@ -1,97 +1,58 @@
 <template>
-  <div class="mb-4">
-    <div ref="line-parent-element" class="flex-container space-between">
-      <div class="flex-container">
-        <div class="flex-container flex-column">
-          <div id="upload-file-source">
-            <upload-file class="mb-4" @upload-success="uploadSuccess" @upload-failure="addFailure"
-              ><h2 class="mb-3 inline-block">Either,</h2>
-              <span> upload a model file:</span></upload-file
-            >
-          </div>
-          <div>
-            <select-model class="mb-4"
-              ><h2 class="mb-3 inline-block">Or,</h2>
-              <span> select an existing model:</span>
-              <br
-            /></select-model>
-          </div>
-        </div>
+  <div class="mb-4 flex-container fill-available space-between">
+    <div class="flex-container flex-column">
+      <div>
+        <select-model class="mb-4"
+          ><h2 class="mb-3 inline-block">Or,</h2>
+          <span> select an existing model:</span>
+          <br
+        /></select-model>
       </div>
-      <div class="flex-container vertical-centre justify-end">
-        <div>
-          <load-model>
-            <h2 class="mb-3 inline-block">Then,</h2>
-            <span> load the model:</span>
-            <br
-          /></load-model>
-        </div>
+      <div id="upload-file-source" ref="bob">
+        <upload-file class="mb-4" @upload-success="uploadSuccess" @upload-failure="addFailure"
+          ><h2 class="mb-3 inline-block">Either,</h2>
+          <span> upload a model file:</span></upload-file
+        >
       </div>
+    </div>
+    <div class="flex-container vertical-centre justify-end">
+      <load-model>
+        <h2 class="mb-3 inline-block">Then,</h2>
+        <span> load the model:</span>
+        <br
+      /></load-model>
     </div>
   </div>
 </template>
 
 <script>
-import LeaderLine from 'leader-line-vue'
-
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 import UploadFile from '@/components/UploadFile.vue'
 import LoadModel from '@/components/SimulationSteps/LoadModelStep/LoadModel.vue'
 import SelectModel from '@/components/SimulationSteps/LoadModelStep/SelectModel.vue'
 
+import linesMixin from '@/mixins/lines'
+
 export default {
   name: 'LoadModelStep',
   components: { UploadFile, SelectModel, LoadModel },
+  mixins: [linesMixin],
   data() {
     return {
-      line1: null,
-      line2: null,
-      ro: null,
+      line1Start: 'upload-file-source',
+      line2Start: 'use-file-source',
+      linesEnd: 'load-file-target',
     }
   },
   computed: {
     ...mapGetters(['parameterInformation']),
   },
-  mounted() {
-    // Initialise a resize observer to update lines if any of the elements
-    // move.
-    const observer = new ResizeObserver(this.updateLines)
-    // Draw in some lines showing the connection between
-    // the two different sources of the load model field.
-    const el1 = document.getElementById('upload-file-source')
-    const el2 = document.getElementById('use-file-source')
-    const el3 = document.getElementById('load-file-target')
-    observer.observe(el1)
-    observer.observe(el2)
-    observer.observe(el3)
-    this.ro = observer
-
-    this.line1 = LeaderLine.setLine(el1, el3, {
-      color: 'red',
-      dash: true,
-    })
-    this.line2 = LeaderLine.setLine(el2, el3, {
-      color: 'red',
-      dash: true,
-    })
-  },
-  beforeDestroy() {
-    if (this.ro) {
-      this.ro.disconnect()
-    }
-    this.line1.remove()
-    this.line2.remove()
-  },
   methods: {
-    ...mapMutations(['setCurrentUserModel']),
+    ...mapMutations('model', ['setCurrentItem']),
     ...mapActions('notifications', ['addSuccess', 'addFailure']),
-    updateLines() {
-      this.line1.position()
-      this.line2.position()
-    },
     uploadSuccess(fileName) {
-      this.setCurrentUserModel(fileName)
+      this.setCurrentItem(fileName)
       this.addSuccess(`Uploaded '${fileName}'`)
     },
   },

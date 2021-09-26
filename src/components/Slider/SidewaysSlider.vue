@@ -14,7 +14,12 @@
     <div class="horizontal-centre">
       <ol class="flex-container goto-buttons-list horizontal-centre">
         <li v-for="n in slides.length" :key="n" class="goto-list-item">
-          <button class="btn btn-primary btn-rounded" :disabled="!slidesReady[n - 1]" @click.prevent="goToIndex(n - 1)">
+          <button
+            class="btn btn-rounded"
+            :class="[n - 1 === currentIndex ? 'btn-success' : 'btn-primary']"
+            :disabled="!slidesReady[n - 1]"
+            @click.prevent="goToIndex(n - 1)"
+          >
             {{ n }}
           </button>
         </li>

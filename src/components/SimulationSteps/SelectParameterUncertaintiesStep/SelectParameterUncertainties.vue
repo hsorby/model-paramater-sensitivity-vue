@@ -10,7 +10,7 @@
         class="mr-4 inline-block select"
         @input="itemChanged"
       ></v-select>
-      <select-button id="use-file-source" :disabled="itemCount === 0" @click="selectCurrentItem" />
+      <select-button id="select-parameter-uncertainties-source" :disabled="itemCount === 0" @click="selectCurrentItem" />
     </local-loading>
   </div>
 </template>
@@ -24,16 +24,16 @@ import LocalLoading from '../../LocalLoading.vue'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'SelectModel',
+  name: 'SelectParameterUncertainties',
   components: { vSelect, SelectButton, LocalLoading },
   computed: {
-    ...mapGetters('model', ['itemList', 'fetchingItems', 'selectedItem']),
+    ...mapGetters('parameterUncertainties', ['itemList', 'fetchingItems', 'selectedItem']),
     itemCount() {
       return this.itemList.length
     },
   },
   methods: {
-    ...mapMutations('model', ['setCurrentItem', 'setSelectedItem']),
+    ...mapMutations('parameterUncertainties', ['setCurrentItem', 'setSelectedItem']),
     selectCurrentItem() {
       this.setCurrentItem(this.selectedItem)
     },

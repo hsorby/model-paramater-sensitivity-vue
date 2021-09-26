@@ -1,13 +1,15 @@
 <template>
   <div>
     <slot></slot>
-    <div class="container">
-      <tree :data="modelParameters" @select="$emit('select', $event)" />
+    <div class="flex-container container">
+      <tree :data="modelParameters" :selected-data="value" @select="$emit('input', $event)" />
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 import Tree from '@/components/Tree/Tree.vue'
 
 export default {
@@ -16,13 +18,30 @@ export default {
   props: {
     modelParameters: {
       type: Object,
-      default: function () {
-        return {}
+      default: () => {},
+    },
+    value: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  watch: {
+    value: {
+      handler() {
+        if (this.value.length > 0) {
+          this.setCurrentItem('<user-selection>')
+        } else {
+          this.setCurrentItem('<not-set>')
+        }
       },
     },
   },
+  methods: {
+    ...mapMutations('parameterUncertainties', ['setCurrentItem', 'setSelectedItem']),
+  },
 }
 </script>
+
 <style scoped>
 .container {
   max-height: 30rem;

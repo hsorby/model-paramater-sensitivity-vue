@@ -2,9 +2,9 @@
   <div>
     <local-loading :loading="loadingItem">
       <slot></slot>
-      <div id="load-file-target">
+      <div id="load-parameter-uncertainties-target">
         <span :class="{ 'ghost-text': !valueReady }">{{ currentItem }}</span>
-        <load-button class="ml-2" :disabled="!valueReady" @click="loadUserModel" />
+        <load-button class="ml-2" :disabled="!valueReady" @click="loadModelParameterUncertainties" />
       </div>
     </local-loading>
   </div>
@@ -20,13 +20,13 @@ export default {
   name: 'LoadModel',
   components: { LoadButton, LocalLoading },
   computed: {
-    ...mapGetters('model', ['currentItem', 'loadingItem']),
+    ...mapGetters('parameterUncertainties', ['currentItem', 'loadingItem']),
     valueReady() {
       return this.currentItem !== '<not-set>'
     },
   },
   methods: {
-    ...mapActions(['loadUserModel']),
+    ...mapActions(['loadModelParameterUncertainties']),
   },
 }
 </script>

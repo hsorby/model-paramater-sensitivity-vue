@@ -21,6 +21,12 @@ export default {
         return {}
       },
     },
+    selectedData: {
+      type: Array,
+      default: function () {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -47,7 +53,12 @@ export default {
             icon = this.imgState
           }
           const id = `${key}.${childKey}`
-          const childNode = this.createNode(childKey, icon, id)
+          let isSelected = false
+          const idx = this.selectedData.findIndex((e) => e.id === id)
+          if (idx !== -1) {
+            isSelected = true
+          }
+          const childNode = this.createNode(childKey, icon, id, isSelected)
           this.addNode(node, childNode)
         }
         this.addNode(root, node)
@@ -60,19 +71,17 @@ export default {
     },
   },
   methods: {
-    createNode(name, icon, id) {
+    createNode(name, icon, id, isSelected) {
       return {
         name: name ? name : '',
         icon,
         id,
-        isOpen: false,
-        isParent: false,
+        isSelected,
         children: [],
       }
     },
     addNode(parent, node) {
       parent.isOpen = true
-      parent.isParent = true
       parent.children.push(node)
     },
   },
@@ -81,6 +90,7 @@ export default {
 
 <style scoped>
 .tree {
+  width: 100%;
   font-size: 14px;
   min-height: 20px;
   -webkit-border-radius: 4px;
