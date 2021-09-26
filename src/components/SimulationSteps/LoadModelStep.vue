@@ -3,14 +3,14 @@
     <div class="flex-container flex-column">
       <div>
         <select-model class="mb-4"
-          ><h2 class="mb-3 inline-block">Or,</h2>
+          ><h2 class="mb-3 inline-block">Either,</h2>
           <span> select an existing model:</span>
           <br
         /></select-model>
       </div>
       <div id="upload-file-source" ref="bob">
         <upload-file class="mb-4" @upload-success="uploadSuccess" @upload-failure="addFailure"
-          ><h2 class="mb-3 inline-block">Either,</h2>
+          ><h2 class="mb-3 inline-block">Or,</h2>
           <span> upload a model file:</span></upload-file
         >
       </div>
