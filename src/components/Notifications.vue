@@ -5,11 +5,11 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import toastMixin from '@/mixins/toast'
+// import toastMixin from '@/mixins/toast'
 
 export default {
   name: 'Notifications',
-  mixins: [toastMixin],
+  // mixins: [toastMixin],
   computed: {
     ...mapGetters('notifications', ['messages']),
   },
