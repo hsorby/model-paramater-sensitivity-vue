@@ -16,6 +16,16 @@ code {
   display: inline-block;
 }
 
+.v-select {
+  min-width: 27rem;
+}
+
+@media (max-width: 768px) {
+  .v-select {
+    min-width: 11rem;
+  }
+}
+
 .next-steps .fa-link {
   margin-right: 5px;
 }

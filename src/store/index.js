@@ -6,9 +6,11 @@ import { getInstance } from '@/auth/auth0-plugin'
 import { listUserModels, fetchModelParameterInfo } from '@/services/backend-api.js'
 
 import * as notifications from '@/store/modules/notifications.js'
+import * as distributions from '@/store/modules/distributions.js'
 
 import LoadModelStep from '@/components/SimulationSteps/LoadModelStep.vue'
 import SelectParameterUncertaintiesStep from '@/components/SimulationSteps/SelectParameterUncertaintiesStep.vue'
+import DefineParameterUncertaintiesStep from '@/components/SimulationSteps/DefineParameterUncertaintiesStep.vue'
 
 Vue.use(Vuex)
 
@@ -72,13 +74,27 @@ const parameterUncertainties = {
   actions: {},
 }
 
+const uncertaintyDefinitions = {
+  namespaced: true,
+  state: { ...selectorState },
+  getters: { ...selectorGetters },
+  mutations: {
+    ...selectorMutations,
+    assignUncertaintyDistribution(state, payload) {
+      console.log('assigining to :', payload)
+      Vue.set(payload.item, 'distribution', payload.distribution)
+    },
+  },
+  actions: {},
+}
+
 export default new Vuex.Store({
   state: {
     activeUser: false,
     parameterInformation: {},
     parameterUncertaintiesData: [],
-    simulationSteps: [LoadModelStep, SelectParameterUncertaintiesStep],
-    simulationStepsReady: [true, false],
+    simulationSteps: [LoadModelStep, SelectParameterUncertaintiesStep, DefineParameterUncertaintiesStep],
+    simulationStepsReady: [true, false, false],
   },
   getters: {
     parameterInformation: function (state) {
@@ -159,9 +175,17 @@ export default new Vuex.Store({
         }
       )
     },
-    async loadModelParameterUncertainties({ state }) {
-      console.log('loading parameter uncertainties: ', state.parameterUncertainties.currentItem)
+    async loadModelParameterUncertainties({ dispatch, commit, state }) {
+      const currentItem = state.parameterUncertainties.currentItem
+      if (currentItem === '<user-selection>') {
+        commit('uncertaintyDefinitions/setItemList', state.parameterUncertaintiesData)
+        commit('uncertaintyDefinitions/setSelectedItem', state.parameterUncertaintiesData[0])
+        commit('setSimulationStepReady', 2)
+        dispatch('notifications/addSuccess', 'Parameter information successfully loaded.')
+      } else {
+        console.log('load from file.')
+      }
     },
   },
-  modules: { notifications, model, parameterUncertainties },
+  modules: { distributions, notifications, model, parameterUncertainties, uncertaintyDefinitions },
 })
