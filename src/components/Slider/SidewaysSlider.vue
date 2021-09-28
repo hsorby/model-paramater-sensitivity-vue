@@ -48,7 +48,9 @@ export default {
   },
   computed: {
     prevEnabled() {
-      return this.currentIndex > 0
+      const inRange = this.currentIndex > 0
+      const isReady = this.slidesReady[this.currentIndex - 1]
+      return inRange && isReady
     },
     nextEnabled() {
       const inRange = this.currentIndex < this.slides.length - 1

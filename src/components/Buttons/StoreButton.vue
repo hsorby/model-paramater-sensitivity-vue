@@ -1,10 +1,10 @@
 <template>
-  <button class="btn btn-primary" :class="{ disabled }" :disabled="disabled" @click.prevent="$emit('click')">Store</button>
+  <button class="btn btn-primary" :class="{ disabled }" :disabled="disabled" @click.prevent="$emit('click')">Save</button>
 </template>
 
 <script>
 export default {
-  name: 'StoreButton',
+  name: 'SaveButton',
   props: {
     disabled: {
       type: Boolean,

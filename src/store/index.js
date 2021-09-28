@@ -3,7 +3,14 @@ import Vuex from 'vuex'
 
 import { getInstance } from '@/auth/auth0-plugin'
 
-import { listUserModels, fetchModelParameterInfo, listUserParameterUncertainties, fetchParameterUncertainties } from '@/services/backend-api.js'
+import {
+  listUserModels,
+  fetchModelParameterInfo,
+  listUserOutputParameters,
+  listUserParameterUncertainties,
+  fetchOutputParameters,
+  fetchParameterUncertainties,
+} from '@/services/backend-api.js'
 
 import * as notifications from '@/store/modules/notifications.js'
 import * as distributions from '@/store/modules/distributions.js'
@@ -13,6 +20,7 @@ import LoadModelStep from '@/components/SimulationSteps/LoadModelStep.vue'
 import SelectParameterUncertaintiesStep from '@/components/SimulationSteps/SelectParameterUncertaintiesStep.vue'
 import DefineParameterUncertaintiesStep from '@/components/SimulationSteps/DefineParameterUncertaintiesStep.vue'
 import SetSimulationParametersStep from '@/components/SimulationSteps/SetSimulationParametersStep.vue'
+import SelectOutputParametersStep from '@/components/SimulationSteps/SelectOutputParametersStep.vue'
 
 Vue.use(Vuex)
 
@@ -76,6 +84,14 @@ const parameterUncertainties = {
   actions: {},
 }
 
+const outputParameters = {
+  namespaced: true,
+  state: { ...selectorState },
+  getters: { ...selectorGetters },
+  mutations: { ...selectorMutations },
+  actions: {},
+}
+
 const uncertaintyDefinitions = {
   namespaced: true,
   state: { ...selectorState },
@@ -95,8 +111,15 @@ export default new Vuex.Store({
     activeUser: false,
     parameterInformation: {},
     parameterUncertaintiesData: [],
-    simulationSteps: [LoadModelStep, SelectParameterUncertaintiesStep, DefineParameterUncertaintiesStep, SetSimulationParametersStep],
-    simulationStepsReady: [true, false, false, false],
+    outputParametersData: [],
+    simulationSteps: [
+      LoadModelStep,
+      SelectParameterUncertaintiesStep,
+      DefineParameterUncertaintiesStep,
+      SetSimulationParametersStep,
+      SelectOutputParametersStep,
+    ],
+    simulationStepsReady: [true, false, false, true, false],
   },
   getters: {
     parameterInformation: function (state) {
@@ -107,6 +130,9 @@ export default new Vuex.Store({
     },
     parameterUncertaintiesData: function (state) {
       return state.parameterUncertaintiesData
+    },
+    outputParametersData: function (state) {
+      return state.outputParametersData
     },
     hasParameterUncertaintiesData: function (state) {
       return state.parameterUncertaintiesData.length > 0
@@ -135,6 +161,18 @@ export default new Vuex.Store({
       const idx = state.parameterUncertaintiesData.findIndex((e) => e.id === payload.id)
       if (idx !== -1) {
         state.parameterUncertaintiesData.splice(idx, 1)
+      }
+    },
+    setOutputParametersData(state, payload) {
+      state.outputParametersData = payload
+    },
+    addOutputParameter(state, payload) {
+      state.outputParametersData.push(payload)
+    },
+    removeOutputParameter(state, payload) {
+      const idx = state.outputParametersData.findIndex((e) => e.id === payload.id)
+      if (idx !== -1) {
+        state.outputParametersData.splice(idx, 1)
       }
     },
     setSimulationStepReady(state, payload) {
@@ -178,6 +216,24 @@ export default new Vuex.Store({
         }
       }
     },
+    async fetchOutputParameters({ dispatch, commit, state }) {
+      const authService = getInstance()
+      commit('outputParameters/setFetchingItems', true)
+      const accessToken = await authService.getTokenSilently()
+      const files = await listUserOutputParameters(state.model.currentItem, accessToken).catch((error) => {
+        dispatch('notifications/addFailure', `${error.message} - unable to fetch user output parameters`)
+        return
+      })
+      if (files) {
+        dispatch('notifications/addSuccess', 'Successfully fetched available user output parameters.')
+        commit('outputParameters/setItemList', files.output_parameters)
+        commit('outputParameters/setFetchingItems', false)
+        const currentUserOutputParameters = [...state.outputParameters.itemList]
+        if (currentUserOutputParameters.indexOf(state.outputParameters.selectedItem) == -1) {
+          commit('outputParameters/setSelectedItem', currentUserOutputParameters[0])
+        }
+      }
+    },
     async loadUserModel({ dispatch, commit, state }) {
       const authService = getInstance()
       commit('model/setLoadingItem', true)
@@ -186,6 +242,7 @@ export default new Vuex.Store({
         (value) => {
           commit('setParameterInformation', value.parameter_information)
           commit('setSimulationStepReady', 1)
+          commit('setSimulationStepReady', 4)
           dispatch('notifications/addSuccess', 'Parameter information successfully loaded.')
           commit('model/setLoadingItem', false)
         },
@@ -194,6 +251,36 @@ export default new Vuex.Store({
           commit('model/setLoadingItem', false)
         }
       )
+    },
+    async loadModelOutputParameters({ dispatch, commit, state }) {
+      console.log('load here.', state.outputParameters)
+      const currentItem = state.outputParameters.currentItem
+      if (currentItem === '<user-selection>') {
+        // commit('outputParameters/setItemList', state.outputParametersData)
+        // commit('outputParameters/setSelectedItem', state.outputParametersData[0])
+        console.log('set next simulation step ready ...')
+        // commit('setSimulationStepReady', 2)
+        dispatch('notifications/addSuccess', 'Output parameters successfully loaded.')
+      } else {
+        const authService = getInstance()
+        commit('outputParameters/setLoadingItem', true)
+        const accessToken = await authService.getTokenSilently()
+        const associated_model = state.model.currentItem
+        const filename = state.outputParameters.currentItem
+        fetchOutputParameters(associated_model, filename, accessToken).then(
+          (value) => {
+            commit('setOutputParametersData', value.output_parameters_information)
+            console.log('set next simulation step ready ...')
+            // commit('setSimulationStepReady', 2)
+            dispatch('notifications/addSuccess', 'Output parameters successfully loaded.')
+            commit('outputParameters/setLoadingItem', false)
+          },
+          (reason) => {
+            dispatch('notifications/addFailure', `${reason} - unable to load user output parameters`)
+            commit('outputParameters/setLoadingItem', false)
+          }
+        )
+      }
     },
     async loadModelParameterUncertainties({ dispatch, commit, state }) {
       const currentItem = state.parameterUncertainties.currentItem
@@ -210,6 +297,7 @@ export default new Vuex.Store({
         const filename = state.parameterUncertainties.currentItem
         fetchParameterUncertainties(associated_model, filename, accessToken).then(
           (value) => {
+            commit('setParameterUncertaintiesData', value.parameter_uncertainty_information)
             commit('uncertaintyDefinitions/setItemList', value.parameter_uncertainty_information)
             commit('uncertaintyDefinitions/setSelectedItem', value.parameter_uncertainty_information[0])
             commit('setSimulationStepReady', 2)
@@ -224,5 +312,5 @@ export default new Vuex.Store({
       }
     },
   },
-  modules: { distributions, notifications, model, parameterUncertainties, simulationParameters, uncertaintyDefinitions },
+  modules: { distributions, model, notifications, outputParameters, parameterUncertainties, simulationParameters, uncertaintyDefinitions },
 })

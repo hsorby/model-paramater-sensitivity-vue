@@ -43,6 +43,22 @@ const storeParameterUncertainties = async (jsonData, modelFile, fileName, token)
   return response.data
 }
 
+const storeOutputParameters = async (jsonData, modelFile, fileName, token) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      filename: fileName,
+      model: modelFile,
+    },
+  }
+  const response = await apiClient.post('store/output-parameters', jsonData, config)
+
+  return response.data
+}
+
 const listUserModels = async (token) => {
   const config = {
     headers: {
@@ -50,6 +66,20 @@ const listUserModels = async (token) => {
     },
   }
   const response = await apiClient.get('user/list-models', config)
+
+  return response.data
+}
+
+const listUserOutputParameters = async (associated_model, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      model: associated_model,
+    },
+  }
+  const response = await apiClient.get('user/list-output-parameters', config)
 
   return response.data
 }
@@ -82,6 +112,21 @@ const fetchModelParameterInfo = async (filename, token) => {
   return response.data
 }
 
+const fetchOutputParameters = async (associated_model, filename, token) => {
+  const config = {
+    params: {
+      filename,
+      model: associated_model,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await apiClient.get('info/output-parameters', config)
+
+  return response.data
+}
+
 const fetchParameterUncertainties = async (associated_model, filename, token) => {
   const config = {
     params: {
@@ -97,4 +142,14 @@ const fetchParameterUncertainties = async (associated_model, filename, token) =>
   return response.data
 }
 
-export { upload, listUserModels, fetchModelParameterInfo, fetchParameterUncertainties, storeParameterUncertainties, listUserParameterUncertainties }
+export {
+  upload,
+  listUserModels,
+  fetchModelParameterInfo,
+  fetchOutputParameters,
+  fetchParameterUncertainties,
+  storeOutputParameters,
+  storeParameterUncertainties,
+  listUserOutputParameters,
+  listUserParameterUncertainties,
+}
