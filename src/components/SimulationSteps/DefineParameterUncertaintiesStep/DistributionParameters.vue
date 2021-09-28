@@ -82,27 +82,7 @@ export default {
 </script>
 
 <style scoped>
-label {
-  text-align: right;
-  margin-bottom: 0;
-}
-
 .apply-min-width {
   min-width: 5rem;
-}
-
-input[type='checkbox'] {
-  display: flex;
-  align-self: center;
-}
-
-label:after {
-  content: ':';
-}
-
-div.form-layout {
-  display: grid;
-  grid-template-columns: max-content max-content;
-  grid-gap: 5px;
 }
 </style>

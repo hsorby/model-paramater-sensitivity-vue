@@ -7,6 +7,7 @@ import { listUserModels, fetchModelParameterInfo, listUserParameterUncertainties
 
 import * as notifications from '@/store/modules/notifications.js'
 import * as distributions from '@/store/modules/distributions.js'
+import * as simulationParameters from '@/store/modules/simulationparameters.js'
 
 import LoadModelStep from '@/components/SimulationSteps/LoadModelStep.vue'
 import SelectParameterUncertaintiesStep from '@/components/SimulationSteps/SelectParameterUncertaintiesStep.vue'
@@ -223,5 +224,5 @@ export default new Vuex.Store({
       }
     },
   },
-  modules: { distributions, notifications, model, parameterUncertainties, uncertaintyDefinitions },
+  modules: { distributions, notifications, model, parameterUncertainties, simulationParameters, uncertaintyDefinitions },
 })

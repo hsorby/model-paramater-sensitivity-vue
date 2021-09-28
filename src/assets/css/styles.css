@@ -12,6 +12,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+input[type='checkbox'] {
+  display: flex;
+  align-self: center;
+}
+
+label {
+  text-align: right;
+  margin-bottom: 0;
+}
+
+label:after {
+  content: ':';
+}
+
+div.form-layout {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 5px;
+}
+
 .inline-block {
   display: inline-block;
 }
