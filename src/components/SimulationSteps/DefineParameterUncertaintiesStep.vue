@@ -3,8 +3,8 @@
     <div class="flex-container flex-column">
       <div class="mb-4">
         <select-parameter-uncertainties-definition class="mb-4"
-          ><h2 class="mb-4 inline-block">Define,</h2>
-          <span> parameter uncertainties distribution:</span><br
+          ><h2 class="mb-4 inline-block">Select,</h2>
+          <span> parameter</span><br
         /></select-parameter-uncertainties-definition>
         <input v-model="fileName" type="text" placeholder="set filename here" class="mr-2" />
         <store-button :disabled="fileName === ''" @click="storeParameterUncertainityDistributions" />
@@ -78,9 +78,20 @@ export default {
       return this.undefinedDistributions.length > 0
     },
   },
+  watch: {
+    undefinedDistributions: {
+      handler(value) {
+        if (value.length === 0) {
+          this.setSimulationStepReady(3)
+        }
+      },
+      immediate: true,
+    },
+  },
   methods: {
     ...mapActions('notifications', ['addSuccess', 'addFailure']),
     ...mapMutations('uncertaintyDefinitions', ['assignUncertaintyDistribution']),
+    ...mapMutations(['setSimulationStepReady']),
     async storeParameterUncertainityDistributions() {
       const accessToken = await this.$auth.getTokenSilently()
       storeParameterUncertainties(this.itemList, this.currentItem, this.fileName, accessToken)

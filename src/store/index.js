@@ -11,6 +11,7 @@ import * as distributions from '@/store/modules/distributions.js'
 import LoadModelStep from '@/components/SimulationSteps/LoadModelStep.vue'
 import SelectParameterUncertaintiesStep from '@/components/SimulationSteps/SelectParameterUncertaintiesStep.vue'
 import DefineParameterUncertaintiesStep from '@/components/SimulationSteps/DefineParameterUncertaintiesStep.vue'
+import SetSimulationParametersStep from '@/components/SimulationSteps/SetSimulationParametersStep.vue'
 
 Vue.use(Vuex)
 
@@ -93,8 +94,8 @@ export default new Vuex.Store({
     activeUser: false,
     parameterInformation: {},
     parameterUncertaintiesData: [],
-    simulationSteps: [LoadModelStep, SelectParameterUncertaintiesStep, DefineParameterUncertaintiesStep],
-    simulationStepsReady: [true, false, false],
+    simulationSteps: [LoadModelStep, SelectParameterUncertaintiesStep, DefineParameterUncertaintiesStep, SetSimulationParametersStep],
+    simulationStepsReady: [true, false, false, false],
   },
   getters: {
     parameterInformation: function (state) {

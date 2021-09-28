@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h2 class="mb-4">Distribution definition</h2>
+    <h2 class="mb-4 inline-block">Define,</h2>
+    <span> distribution for parameter</span><br />
     <distribution-list v-model="localName" class="mb-4" :names="distributionNames"></distribution-list>
     <distribution-parameters
       :parameter-values="localValues"

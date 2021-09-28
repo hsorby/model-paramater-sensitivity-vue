@@ -1,5 +1,5 @@
 <template>
-  <div class="settings">
+  <div class="form-layout">
     <template v-for="(p, index) in parameterNames" :label="p">
       <label :key="p + '-label'" :for="'parameter-name-' + p" :class="{ 'apply-min-width': truncatable }"
         ><strong>{{ p }}</strong> </label
@@ -100,7 +100,7 @@ label:after {
   content: ':';
 }
 
-div.settings {
+div.form-layout {
   display: grid;
   grid-template-columns: max-content max-content;
   grid-gap: 5px;
