@@ -29,9 +29,6 @@ export default {
   },
   methods: {
     ...mapMutations('uncertaintyDefinitions', ['setSelectedItem']),
-    itemChanged() {
-      console.log('itemChanged')
-    },
   },
 }
 </script>

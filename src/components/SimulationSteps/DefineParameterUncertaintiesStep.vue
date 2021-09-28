@@ -6,7 +6,8 @@
           ><h2 class="mb-4 inline-block">Define,</h2>
           <span> parameter uncertainties distribution:</span><br
         /></select-parameter-uncertainties-definition>
-        <store-button @click="storeParameterUncertainityDistributions" />
+        <input v-model="fileName" type="text" placeholder="set filename here" class="mr-2" />
+        <store-button :disabled="fileName === ''" @click="storeParameterUncertainityDistributions" />
       </div>
       <div v-show="haveUndefinedDistributions">
         <h2 class="mb-4 inline-block">[Currently Undefined,</h2>
@@ -19,41 +20,56 @@
       </div>
     </div>
     <div>
-      <distribution-definition v-model="definition" class="mb-4"></distribution-definition>
-      <assign-button id="assign-parameter-distribution" @click="assignDistribution" />
+      <distribution-definition v-model="currentDefinition" class="mb-4"></distribution-definition>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 
-import AssignButton from '../Buttons/AssignButton.vue'
 import StoreButton from '../Buttons/StoreButton.vue'
 import DistributionDefinition from './DefineParameterUncertaintiesStep/DistributionDefinition.vue'
 import SelectParameterUncertaintiesDefinition from './DefineParameterUncertaintiesStep/SelectParameterUncertaintiesDefinition.vue'
 
-import linesMixin from '@/mixins/lines'
+import { storeParameterUncertainties } from '@/services/backend-api'
 
 export default {
   name: 'DefineParameterUncertaintiesStep',
-  components: { SelectParameterUncertaintiesDefinition, DistributionDefinition, AssignButton, StoreButton },
-  mixins: [linesMixin],
+  components: { SelectParameterUncertaintiesDefinition, DistributionDefinition, StoreButton },
   data() {
-    return {
-      definition: {
-        name: 'normal',
-        parameters: {
-          values: [1.0, 1.0, 0.0, 2.0],
-          truncate: false,
-        },
+    const definition_default = {
+      name: 'normal',
+      parameters: {
+        values: [1.0, 1.0, 0.0, 2.0],
+        truncate: false,
       },
-      line1Start: 'assign-parameter-distribution',
-      linesEnd: 'select-uncertain-parameter',
+    }
+    return {
+      definition: definition_default,
+      fileName: '',
     }
   },
   computed: {
     ...mapGetters('uncertaintyDefinitions', ['itemList', 'selectedItem']),
+    ...mapGetters('model', ['currentItem']),
+    currentDefinition: {
+      get() {
+        if (this.selectedItem.distribution === null) {
+          return {
+            name: 'normal',
+            parameters: {
+              values: [1.0, 1.0, 0.0, 2.0],
+              truncate: false,
+            },
+          }
+        }
+        return this.selectedItem.distribution
+      },
+      set(value) {
+        this.assignUncertaintyDistribution({ item: this.selectedItem, distribution: value })
+      },
+    },
     undefinedDistributions() {
       const undefinedDistributionItems = this.itemList.filter((item) => item.distribution === null)
       return undefinedDistributionItems
@@ -62,23 +78,23 @@ export default {
       return this.undefinedDistributions.length > 0
     },
   },
-  watch: {
-    'definition.parameters.truncate': {
-      handler() {
-        // The truncate value has been toggled so update the position of the line.
-        this.$nextTick(function () {
-          this.line1.position()
-        })
-      },
-    },
-  },
   methods: {
+    ...mapActions('notifications', ['addSuccess', 'addFailure']),
     ...mapMutations('uncertaintyDefinitions', ['assignUncertaintyDistribution']),
-    assignDistribution() {
-      this.assignUncertaintyDistribution({ item: this.selectedItem, distribution: this.definition })
-    },
-    storeParameterUncertainityDistributions() {
-      console.log('Save the definitions to disk.')
+    async storeParameterUncertainityDistributions() {
+      const accessToken = await this.$auth.getTokenSilently()
+      storeParameterUncertainties(this.itemList, this.currentItem, this.fileName, accessToken)
+        .then(
+          (response) => {
+            this.addSuccess(response.message)
+          },
+          (reason) => {
+            this.addFailure(reason.message)
+          }
+        )
+        .catch((error) => {
+          this.addFailure(error)
+        })
     },
   },
 }

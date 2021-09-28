@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 import { getInstance } from '@/auth/auth0-plugin'
 
-import { listUserModels, fetchModelParameterInfo } from '@/services/backend-api.js'
+import { listUserModels, fetchModelParameterInfo, listUserParameterUncertainties, fetchParameterUncertainties } from '@/services/backend-api.js'
 
 import * as notifications from '@/store/modules/notifications.js'
 import * as distributions from '@/store/modules/distributions.js'
@@ -81,8 +81,8 @@ const uncertaintyDefinitions = {
   mutations: {
     ...selectorMutations,
     assignUncertaintyDistribution(state, payload) {
-      console.log('assigining to :', payload)
-      Vue.set(payload.item, 'distribution', payload.distribution)
+      Vue.set(state.selectedItem, 'distribution', payload.distribution)
+      // Vue.set(payload.item, 'distribution', payload.distribution)
     },
   },
   actions: {},
@@ -158,6 +158,24 @@ export default new Vuex.Store({
         }
       }
     },
+    async fetchParameterUncertainties({ dispatch, commit, state }) {
+      const authService = getInstance()
+      commit('parameterUncertainties/setFetchingItems', true)
+      const accessToken = await authService.getTokenSilently()
+      const files = await listUserParameterUncertainties(state.model.currentItem, accessToken).catch((error) => {
+        dispatch('notifications/addFailure', `${error.message} - unable to fetch user uncertainty definitions`)
+        return
+      })
+      if (files) {
+        dispatch('notifications/addSuccess', 'Successfully fetched available user uncertainty definitions.')
+        commit('parameterUncertainties/setItemList', files.uncertainty_definitions)
+        commit('parameterUncertainties/setFetchingItems', false)
+        const currentUserParameterUncertainties = [...state.parameterUncertainties.itemList]
+        if (currentUserParameterUncertainties.indexOf(state.parameterUncertainties.selectedItem) == -1) {
+          commit('parameterUncertainties/setSelectedItem', currentUserParameterUncertainties[0])
+        }
+      }
+    },
     async loadUserModel({ dispatch, commit, state }) {
       const authService = getInstance()
       commit('model/setLoadingItem', true)
@@ -183,7 +201,24 @@ export default new Vuex.Store({
         commit('setSimulationStepReady', 2)
         dispatch('notifications/addSuccess', 'Parameter information successfully loaded.')
       } else {
-        console.log('load from file.')
+        const authService = getInstance()
+        commit('uncertaintyDefinitions/setLoadingItem', true)
+        const accessToken = await authService.getTokenSilently()
+        const associated_model = state.model.currentItem
+        const filename = state.parameterUncertainties.currentItem
+        fetchParameterUncertainties(associated_model, filename, accessToken).then(
+          (value) => {
+            commit('uncertaintyDefinitions/setItemList', value.parameter_uncertainty_information)
+            commit('uncertaintyDefinitions/setSelectedItem', value.parameter_uncertainty_information[0])
+            commit('setSimulationStepReady', 2)
+            dispatch('notifications/addSuccess', 'Uncertainties definitions successfully loaded.')
+            commit('uncertaintyDefinitions/setLoadingItem', false)
+          },
+          (reason) => {
+            dispatch('notifications/addFailure', `${reason} - unable to load user uncertainties definitions`)
+            commit('uncertaintyDefinitions/setLoadingItem', false)
+          }
+        )
       }
     },
   },

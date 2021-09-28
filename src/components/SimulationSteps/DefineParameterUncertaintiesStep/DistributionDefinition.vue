@@ -53,25 +53,8 @@ export default {
     localTruncate() {
       return this.value.parameters.truncate
     },
-    localValues: {
-      get() {
-        return this.value.parameters.values.slice(0)
-      },
-      set(value) {
-        this.parameterValuesChanged(value)
-      },
-    },
-  },
-  watch: {
-    localName: {
-      handler() {
-        let n = this.currentParameters.parameters.length
-        if (this.currentParameters.truncatable) {
-          n += 2
-        }
-
-        this.localValues = Array(n).fill(1)
-      },
+    localValues() {
+      return this.value.parameters.values
     },
   },
   methods: {

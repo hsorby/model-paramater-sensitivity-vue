@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-select v-model="selected" :options="names" :clearable="false" class="mr-4 inline-block v-select"></v-select>
+    <v-select v-model="localName" :options="names" :clearable="false" class="mr-4 inline-block v-select"></v-select>
   </div>
 </template>
 
@@ -20,14 +20,12 @@ export default {
       default: '',
     },
   },
-  data() {
-    return {
-      selected: this.value,
-    }
-  },
-  watch: {
-    selected: {
-      handler(value) {
+  computed: {
+    localName: {
+      get() {
+        return this.value
+      },
+      set(value) {
         this.$emit('input', value)
       },
     },

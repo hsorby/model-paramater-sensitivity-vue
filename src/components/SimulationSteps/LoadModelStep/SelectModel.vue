@@ -7,7 +7,7 @@
         :options="itemList"
         :disabled="itemCount === 0"
         :clearable="false"
-        class="mr-4 inline-block select"
+        class="mr-4 inline-block v-select"
         @input="itemChanged"
       ></v-select>
       <select-button id="use-file-source" :disabled="itemCount === 0" @click="selectCurrentItem" />
@@ -43,17 +43,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.inline-block {
-  display: inline-block;
-}
-.select {
-  min-width: 27rem;
-}
-@media (max-width: 768px) {
-  .select {
-    min-width: 11rem;
-  }
-}
-</style>

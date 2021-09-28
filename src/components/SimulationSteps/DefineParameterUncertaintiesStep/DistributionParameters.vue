@@ -40,7 +40,6 @@ export default {
   data() {
     return {
       localParameterValues: this.parameterValues,
-      localTruncate: this.truncate,
       incomingChange: false,
     }
   },
@@ -53,6 +52,14 @@ export default {
     },
     truncateIndex() {
       return this.parameters.parameters.length
+    },
+    localTruncate: {
+      get() {
+        return this.truncate
+      },
+      set(value) {
+        this.$emit('truncate-changed', value)
+      },
     },
   },
   watch: {
@@ -68,11 +75,6 @@ export default {
       handler(newValue) {
         this.incomingChange = true
         this.localParameterValues = newValue
-      },
-    },
-    localTruncate: {
-      handler(newValue) {
-        this.$emit('truncate-changed', newValue)
       },
     },
   },

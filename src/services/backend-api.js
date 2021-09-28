@@ -27,13 +27,43 @@ const upload = async (formData, fileName, callbackFunction, token) => {
   return response.data
 }
 
+const storeParameterUncertainties = async (jsonData, modelFile, fileName, token) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      filename: fileName,
+      model: modelFile,
+    },
+  }
+  const response = await apiClient.post('store/parameter-uncertainties', jsonData, config)
+
+  return response.data
+}
+
 const listUserModels = async (token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await apiClient.get('user-models', config)
+  const response = await apiClient.get('user/list-models', config)
+
+  return response.data
+}
+
+const listUserParameterUncertainties = async (associated_model, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      model: associated_model,
+    },
+  }
+  const response = await apiClient.get('user/list-parameter-uncertainties', config)
 
   return response.data
 }
@@ -47,9 +77,24 @@ const fetchModelParameterInfo = async (filename, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await apiClient.get('parameter-info', config)
+  const response = await apiClient.get('info/model-parameters', config)
 
   return response.data
 }
 
-export { upload, listUserModels, fetchModelParameterInfo }
+const fetchParameterUncertainties = async (associated_model, filename, token) => {
+  const config = {
+    params: {
+      filename,
+      model: associated_model,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await apiClient.get('info/parameter-uncertainty-distributions', config)
+
+  return response.data
+}
+
+export { upload, listUserModels, fetchModelParameterInfo, fetchParameterUncertainties, storeParameterUncertainties, listUserParameterUncertainties }

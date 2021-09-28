@@ -21,7 +21,7 @@ import vSelect from 'vue-select'
 import SelectButton from '../../Buttons/SelectButton.vue'
 import LocalLoading from '../../LocalLoading.vue'
 
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'SelectParameterUncertainties',
@@ -32,7 +32,11 @@ export default {
       return this.itemList.length
     },
   },
+  mounted() {
+    this.fetchParameterUncertainties()
+  },
   methods: {
+    ...mapActions(['fetchParameterUncertainties']),
     ...mapMutations('parameterUncertainties', ['setCurrentItem', 'setSelectedItem']),
     selectCurrentItem() {
       this.setCurrentItem(this.selectedItem)
