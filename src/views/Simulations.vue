@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 import titleMixin from '@/mixins/title'
 import SidewaysSlider from '@/components/Slider/SidewaysSlider.vue'
@@ -22,6 +22,22 @@ export default {
   mixins: [titleMixin],
   computed: {
     ...mapGetters({ steps: 'simulationSteps', stepsReady: 'simulationStepsReady' }),
+  },
+  watch: {
+    stepsReady: {
+      handler(value) {
+        if (!value[5]) {
+          let copy = value.slice(0)
+          copy[5] = true
+          if (copy.every(Boolean)) {
+            this.setSimulationStepReady(5)
+          }
+        }
+      },
+    },
+  },
+  methods: {
+    ...mapMutations(['setSimulationStepReady']),
   },
 }
 </script>

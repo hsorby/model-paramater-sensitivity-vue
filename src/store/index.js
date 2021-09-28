@@ -21,6 +21,7 @@ import SelectParameterUncertaintiesStep from '@/components/SimulationSteps/Selec
 import DefineParameterUncertaintiesStep from '@/components/SimulationSteps/DefineParameterUncertaintiesStep.vue'
 import SetSimulationParametersStep from '@/components/SimulationSteps/SetSimulationParametersStep.vue'
 import SelectOutputParametersStep from '@/components/SimulationSteps/SelectOutputParametersStep.vue'
+import RunStep from '@/components/SimulationSteps/RunStep.vue'
 
 Vue.use(Vuex)
 
@@ -118,8 +119,9 @@ export default new Vuex.Store({
       DefineParameterUncertaintiesStep,
       SetSimulationParametersStep,
       SelectOutputParametersStep,
+      RunStep,
     ],
-    simulationStepsReady: [true, false, false, true, false],
+    simulationStepsReady: [true, false, false, true, false, false],
   },
   getters: {
     parameterInformation: function (state) {
@@ -253,13 +255,8 @@ export default new Vuex.Store({
       )
     },
     async loadModelOutputParameters({ dispatch, commit, state }) {
-      console.log('load here.', state.outputParameters)
       const currentItem = state.outputParameters.currentItem
       if (currentItem === '<user-selection>') {
-        // commit('outputParameters/setItemList', state.outputParametersData)
-        // commit('outputParameters/setSelectedItem', state.outputParametersData[0])
-        console.log('set next simulation step ready ...')
-        // commit('setSimulationStepReady', 2)
         dispatch('notifications/addSuccess', 'Output parameters successfully loaded.')
       } else {
         const authService = getInstance()
@@ -270,8 +267,6 @@ export default new Vuex.Store({
         fetchOutputParameters(associated_model, filename, accessToken).then(
           (value) => {
             commit('setOutputParametersData', value.output_parameters_information)
-            console.log('set next simulation step ready ...')
-            // commit('setSimulationStepReady', 2)
             dispatch('notifications/addSuccess', 'Output parameters successfully loaded.')
             commit('outputParameters/setLoadingItem', false)
           },
