@@ -31,9 +31,10 @@ export default {
   },
   watch: {
     '$auth.isAuthenticated': {
-      handler() {
+      async handler() {
         this.$store.commit('changeUserState', this.$auth.isAuthenticated)
         this.$store.dispatch('fetchUserModels')
+        this.$store.dispatch('simulations/fetchUserSimulations')
       },
     },
   },

@@ -1,43 +1,19 @@
 <template>
-  <div class="next-steps">
-    <h1 class="my-5 text-center">Run a simulation</h1>
-    <div class="row">
-      <sideways-slider :slides="steps" :slides-ready="stepsReady" />
-    </div>
+  <div class="container">
+    <simulation-tabs />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-
 import titleMixin from '@/mixins/title'
-import SidewaysSlider from '@/components/Slider/SidewaysSlider.vue'
+import SimulationTabs from '@/components/SimulationTabs.vue'
 
 export default {
   name: 'Simulation',
   title: 'Simulation - Model Parameter Sensitivity',
   components: {
-    SidewaysSlider,
+    SimulationTabs,
   },
   mixins: [titleMixin],
-  computed: {
-    ...mapGetters({ steps: 'simulationSteps', stepsReady: 'simulationStepsReady' }),
-  },
-  watch: {
-    stepsReady: {
-      handler(value) {
-        if (!value[5]) {
-          let copy = value.slice(0)
-          copy[5] = true
-          if (copy.every(Boolean)) {
-            this.setSimulationStepReady(5)
-          }
-        }
-      },
-    },
-  },
-  methods: {
-    ...mapMutations(['setSimulationStepReady']),
-  },
 }
 </script>

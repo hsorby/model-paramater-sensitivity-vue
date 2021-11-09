@@ -15,6 +15,9 @@ import {
 import * as notifications from '@/store/modules/notifications.js'
 import * as distributions from '@/store/modules/distributions.js'
 import * as simulationParameters from '@/store/modules/simulationparameters.js'
+import * as simulations from '@/store/modules/simulations.js'
+
+import { selectorGetters, selectorMutations, selectorState } from './selector.js'
 
 import LoadModelStep from '@/components/SimulationSteps/LoadModelStep.vue'
 import SelectParameterUncertaintiesStep from '@/components/SimulationSteps/SelectParameterUncertaintiesStep.vue'
@@ -24,50 +27,6 @@ import SelectOutputParametersStep from '@/components/SimulationSteps/SelectOutpu
 import RunStep from '@/components/SimulationSteps/RunStep.vue'
 
 Vue.use(Vuex)
-
-const selectorState = {
-  currentItem: '<not-set>',
-  fetchingItems: false,
-  itemList: [],
-  loadingItem: false,
-  selectedItem: '',
-}
-
-const selectorGetters = {
-  currentItem: function (state) {
-    return state.currentItem
-  },
-  fetchingItems: function (state) {
-    return state.fetchingItems
-  },
-  itemList: function (state) {
-    return state.itemList
-  },
-  loadingItem: function (state) {
-    return state.loadingItem
-  },
-  selectedItem: function (state) {
-    return state.selectedItem
-  },
-}
-
-const selectorMutations = {
-  setCurrentItem: function (state, payload) {
-    state.currentItem = payload
-  },
-  setFetchingItems: function (state, payload) {
-    state.fetchingItems = payload
-  },
-  setItemList: function (state, payload) {
-    state.itemList = payload
-  },
-  setLoadingItem: function (state, payload) {
-    state.loadingItem = payload
-  },
-  setSelectedItem: function (state, payload) {
-    state.selectedItem = payload
-  },
-}
 
 const model = {
   namespaced: true,
@@ -307,5 +266,14 @@ export default new Vuex.Store({
       }
     },
   },
-  modules: { distributions, model, notifications, outputParameters, parameterUncertainties, simulationParameters, uncertaintyDefinitions },
+  modules: {
+    distributions,
+    model,
+    notifications,
+    outputParameters,
+    parameterUncertainties,
+    simulations,
+    simulationParameters,
+    uncertaintyDefinitions,
+  },
 })

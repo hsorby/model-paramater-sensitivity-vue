@@ -5,7 +5,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { submitJob } from '../../services/backend-api'
+
 export default {
   name: 'RunStep',
   computed: {
@@ -14,8 +16,9 @@ export default {
     ...mapGetters('simulationParameters', ['simulation', 'solver']),
   },
   methods: {
-    runSimulation() {
-      console.log('running simulation')
+    ...mapActions('notifications', ['addSuccess', 'addFailure']),
+    ...mapMutations('simulations', ['addActive']),
+    async runSimulation() {
       const simulationData = {
         model: this.currentItem,
         uncertainties: this.parameterUncertaintiesData,
@@ -25,7 +28,20 @@ export default {
         },
         outputs: this.outputParametersData,
       }
-      console.log(simulationData)
+      const accessToken = await this.$auth.getTokenSilently()
+      submitJob(simulationData, accessToken)
+        .then(
+          (response) => {
+            this.addActive({ reference: response.reference, title: response.title, status: response.status })
+            this.addSuccess(response.message)
+          },
+          (reason) => {
+            this.addFailure(reason.message)
+          }
+        )
+        .catch((error) => {
+          this.addFailure(error)
+        })
     },
   },
 }

@@ -70,6 +70,17 @@ const listUserModels = async (token) => {
   return response.data
 }
 
+const listUserSimulations = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await apiClient.get('user/list-simulations', config)
+
+  return response.data
+}
+
 const listUserOutputParameters = async (associated_model, token) => {
   const config = {
     headers: {
@@ -94,6 +105,34 @@ const listUserParameterUncertainties = async (associated_model, token) => {
     },
   }
   const response = await apiClient.get('user/list-parameter-uncertainties', config)
+
+  return response.data
+}
+
+const fetchSimulationInfo = async (reference, token) => {
+  const config = {
+    params: {
+      reference,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await apiClient.get('user/simulation-info', config)
+
+  return response.data
+}
+
+const fetchSimulationResult = async (reference, token) => {
+  const config = {
+    params: {
+      reference,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await apiClient.get('user/simulation-result', config)
 
   return response.data
 }
@@ -142,14 +181,29 @@ const fetchParameterUncertainties = async (associated_model, filename, token) =>
   return response.data
 }
 
+const submitJob = async (submission_data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await apiClient.post('simulation/submit', submission_data, config)
+
+  return response.data
+}
+
 export {
-  upload,
-  listUserModels,
   fetchModelParameterInfo,
   fetchOutputParameters,
   fetchParameterUncertainties,
-  storeOutputParameters,
-  storeParameterUncertainties,
+  fetchSimulationInfo,
+  fetchSimulationResult,
+  listUserModels,
   listUserOutputParameters,
   listUserParameterUncertainties,
+  listUserSimulations,
+  storeOutputParameters,
+  storeParameterUncertainties,
+  submitJob,
+  upload,
 }
